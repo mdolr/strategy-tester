@@ -1,0 +1,38 @@
+[project]
+name = "mini-test"
+version = "0.1.0"
+description = "Quanta-ventures mini technical test"
+authors = [
+    { name = "Maxime Dolores", email = "19026937+mdolr@users.noreply.github.com" }
+]
+dependencies = [
+    "requests>=2.28.1",
+    "numpy>=1.26.3",
+    "pandas>=2.2.3",
+    "google-api-python-client>=2.155.0",
+    "google-auth-httplib2>=0.2.0",
+    "google-auth-oauthlib>=1.2.1",
+    "python-dotenv>=1.0.1",
+    "flask>=3.1.0",
+    "flask-cors>=5.0.0",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mini_test"]
+
+[tool.rye.scripts]
+main = "python -m src.main"
+test = "python -m src.test"

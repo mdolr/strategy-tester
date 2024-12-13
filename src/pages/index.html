@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quanta Ventures mini technical test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      const search = async function () {
+        const ticker = document.getElementById("input").value;
+
+        // post to /ticker/<string:ticker>
+        const response = await fetch(`/ticker/${ticker}`, {
+          method: "POST",
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        document.getElementById("result").classList.remove("hidden");
+
+        // Automatically generate the table, each key of the object in 1st column, each value in 2nd column
+        const table = document.getElementById("results");
+        document.getElementById("results").innerHTML = "";
+
+        for (const [key, value] of Object.entries(data.results)) {
+          const row = document.createElement("tr");
+
+          const keyCell = document.createElement("td");
+          keyCell.textContent = key;
+          keyCell.className = "border px-4 py-2";
+          row.appendChild(keyCell);
+
+          const valueCell = document.createElement("td");
+          if (keyCell.textContent.includes("returns")) {
+            valueCell.textContent = value.toFixed(3) + "%";
+          } else {
+            valueCell.textContent = value;
+          }
+          valueCell.className = "border px-4 py-2";
+          row.appendChild(valueCell);
+
+          table.appendChild(row);
+        }
+
+        const trades = document.getElementById("trades");
+        document.getElementById("trades").innerHTML = "";
+
+        // make a table listing all the trades to take with columns "buy_date", "buy_price", "sell_date", "sell_price", "return"
+        for (const trade of data?.trades) {
+          const row = document.createElement("tr");
+
+          const buyDateCell = document.createElement("td");
+          buyDateCell.textContent = trade.timestamp;
+          buyDateCell.className = "border px-4 py-2";
+          row.appendChild(buyDateCell);
+
+          const buyPriceCell = document.createElement("td");
+          buyPriceCell.textContent = trade.buy_price;
+          buyPriceCell.className = "border px-4 py-2";
+          row.appendChild(buyPriceCell);
+
+          const sellDateCell = document.createElement("td");
+          sellDateCell.textContent = trade.sell_date;
+          sellDateCell.className = "border px-4 py-2";
+          row.appendChild(sellDateCell);
+
+          const sellPriceCell = document.createElement("td");
+          sellPriceCell.textContent = trade.sell_price;
+          sellPriceCell.className = "border px-4 py-2";
+          row.appendChild(sellPriceCell);
+
+          const returnsCell = document.createElement("td");
+          returnsCell.textContent = trade.return.toFixed(3) + "%";
+          returnsCell.className = "border px-4 py-2";
+          row.appendChild(returnsCell);
+
+          trades.appendChild(row);
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("search").addEventListener("click", search);
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="flex justify-center items-center min-h-screen py-24">
+      <div class="flex flex-col items-center">
+        <h1 class="text-3xl text-center">Quanta Ventures</h1>
+        <h2 class="text-2xl text-center">Mini technical test</h2>
+
+        <input
+          type="text"
+          id="input"
+          class="border border-gray-400 mt-4 px-2 rounded-md"
+          placeholder="Ticker"
+        />
+        <button
+          id="search"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+        >
+          Search
+        </button>
+        <div id="result" class="mt-4 hidden px-12 flex flex-col items-center">
+          <h3 class="text-xl">Results</h3>
+          <table id="results" class="mt-2"></table>
+          <h3 class="text-xl mt-8">Trades</h3>
+          <table class="mt-2">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="border px-4 py-2">Buy Date</th>
+                <th class="border px-4 py-2">Buy Price</th>
+                <th class="border px-4 py-2">Sell Date</th>
+                <th class="border px-4 py-2">Sell Price</th>
+                <th class="border px-4 py-2">Return</th>
+              </tr>
+            </thead>
+            <tbody id="trades"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
